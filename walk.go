@@ -1,17 +1,14 @@
 package monobuild
 
 import (
-	"bytes"
+	"github.com/pkg/errors"
 	"os"
 	p "path"
 	"path/filepath"
-	"text/template"
-
-	"github.com/pkg/errors"
 )
 
 // Walk iterates through sub directories looking for marker
-func (c *Configuration) Walk(baseDir string) error {
+func (c *MonoBuild) Walk(baseDir string) error {
 	if nil == c.sendChannel {
 		return errors.New("no channel provided")
 	}
@@ -20,23 +17,18 @@ func (c *Configuration) Walk(baseDir string) error {
 		return errors.New("base directory not found")
 	}
 
-	tmpl, err := template.New("").Parse(c.Run)
-	if err != nil {
-		return err
-	}
-
-	err = filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			if _, err := os.Stat(p.Join(path, MonoBuildMarker)); err == nil {
+				bc, err := c.loadBuildConfiguration(p.Join(path, MonoBuildMarker))
+				if err != nil {
+					return err
+				}
 				if nil != c.sendChannel {
-					var tpl bytes.Buffer
-					err := tmpl.Execute(&tpl, path)
-					if err != nil {
-						return err
-					}
 					c.sendChannel <- Execute{
-						Directory: path,
-						Command:   tpl.String(),
+						Directory:   path,
+						Commands:    bc.Commands,
+						Environment: bc.Environment,
 					}
 				}
 			}
