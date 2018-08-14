@@ -42,38 +42,47 @@ func run() (returnError error) {
 	}()
 
 	for i := range rec {
-		fmt.Printf("%#v\n", i)
-		for _, cmd := range i.Commands {
-			fmt.Println(cmd)
-			p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
-			if err != nil {
-				return err
-			}
-
-			env := os.Environ()
-			for k, v := range i.Environment {
-				env = append(env, fmt.Sprintf("%s=%s", k, v))
-			}
-
-			r := interp.Runner{
-				Dir: i.Directory,
-				Env: env,
-
-				Exec: interp.DefaultExec,
-				Open: interp.OpenDevImpls(interp.DefaultOpen),
-
-				Stdin:  os.Stdin,
-				Stdout: os.Stdout,
-				Stderr: os.Stderr,
-			}
-			if err = r.Reset(); err != nil {
-				return err
-			}
-			r.Run(p)
-		}
+		runBuild(i)
 	}
 
 	<-exit
 
 	return
+}
+
+func runBuild(i monobuild.Execute) {
+	for _, cmd := range i.Commands {
+		p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			continue
+		}
+
+		env := buildEnvironment(i)
+
+		r := interp.Runner{
+			Dir: i.Directory,
+			Env: env,
+
+			Exec: interp.DefaultExec,
+			Open: interp.OpenDevImpls(interp.DefaultOpen),
+
+			Stdin:  os.Stdin,
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		}
+		if err = r.Reset(); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			continue
+		}
+		r.Run(p)
+	}
+}
+
+func buildEnvironment(i monobuild.Execute) []string {
+	env := os.Environ()
+	for k, v := range i.Environment {
+		env = append(env, fmt.Sprintf("%s=%s", k, v))
+	}
+	return env
 }
