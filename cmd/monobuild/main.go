@@ -41,8 +41,17 @@ func run() (returnError error) {
 		exit <- true
 	}()
 
+	var localError error
 	for i := range rec {
-		runBuild(i)
+		if nil == localError {
+			localError = runBuild(i)
+		}
+	}
+	if nil != localError {
+		fmt.Fprintln(os.Stderr, localError)
+	}
+	if nil == returnError {
+		returnError = localError
 	}
 
 	<-exit
@@ -50,12 +59,11 @@ func run() (returnError error) {
 	return
 }
 
-func runBuild(i monobuild.Execute) {
+func runBuild(i monobuild.Execute) error {
 	for _, cmd := range i.Commands {
 		p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			continue
+			return err
 		}
 
 		env := buildEnvironment(i)
@@ -72,11 +80,14 @@ func runBuild(i monobuild.Execute) {
 			Stderr: os.Stderr,
 		}
 		if err = r.Reset(); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			continue
+			return err
 		}
-		r.Run(p)
+		err = r.Run(p)
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func buildEnvironment(i monobuild.Execute) []string {
