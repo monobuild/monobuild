@@ -9,7 +9,9 @@ import (
 	"livingit.de/code/monobuild/cmd/monobuild/methods"
 )
 
+// main is the entry method of the monobuild application
 func main() {
+	// TODO set WarnLevel as default and provide flag to switch
 	logrus.SetLevel(logrus.DebugLevel)
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
@@ -17,6 +19,7 @@ func main() {
 	}
 }
 
+// run is the wrapper to call the monobuild library
 func run() (returnError error) {
 	methods.PrintHeader()
 
@@ -27,9 +30,6 @@ func run() (returnError error) {
 	}
 
 	cfg := monobuild.NewMonoBuild()
-
-	rec := make(chan monobuild.Execute)
-	cfg.SetChannel(rec)
 
 	exit := make(chan bool)
 

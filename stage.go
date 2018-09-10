@@ -32,7 +32,7 @@ func (stage *Stage) Execute() error {
 	log := stage.Log.WithField("method", "Execute")
 
 	for _, cfg := range stage.Configurations {
-		log.Debugf("working on %s", cfg)
+		log.Infof("working on %s", cfg)
 		result = stage.runConfiguration(cfg, log, result)
 		if nil != result {
 			log.Error("error running configuration, breaking")

@@ -7,8 +7,7 @@ import (
 type (
 	// MonoBuild contains all data required to run the program
 	MonoBuild struct {
-		sendChannel chan Execute  // sendChannel is used to tell executor to execute other process
-		log         *logrus.Entry // base logging facility
+		log *logrus.Entry // base logging facility
 	}
 
 	// Execute is sent to executor with relevant information
