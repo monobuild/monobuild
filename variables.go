@@ -5,5 +5,6 @@ import (
 )
 
 var (
-	tmpl template.Template
+	tmpl   template.Template
+	stages []*Stage
 )

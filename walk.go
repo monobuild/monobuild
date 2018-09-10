@@ -7,36 +7,30 @@ import (
 	"path/filepath"
 )
 
-// Walk iterates through sub directories looking for marker
-func (c *MonoBuild) Walk(baseDir string) error {
-	if nil == c.sendChannel {
-		return errors.New("no channel provided")
-	}
-	defer close(c.sendChannel)
-	if s, err := os.Stat(baseDir); os.IsNotExist(err) || !s.IsDir() {
-		return errors.New("base directory not found")
-	}
-
+// walk iterates through sub directories looking for marker
+func (c *MonoBuild) walk(baseDir string) ([]*buildConfiguration, error) {
+	log := c.log.WithField("method", "walk")
+	configs := make([]*buildConfiguration, 0)
 	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
-			if _, err := os.Stat(p.Join(path, MonoBuildMarker)); err == nil {
-				bc, err := c.loadBuildConfiguration(p.Join(path, MonoBuildMarker))
+			marker := p.Join(path, MonoBuildMarker)
+			if _, err := os.Stat(marker); err == nil {
+				log.Infof("build configuration found at %s", marker)
+				bc, err := c.loadBuildConfiguration(marker)
 				if err != nil {
 					return err
 				}
-				if nil != c.sendChannel {
-					c.sendChannel <- Execute{
-						Directory:   path,
-						Commands:    bc.Commands,
-						Environment: bc.Environment,
-					}
+				if !bc.configurationIsValid() {
+					return errors.New("build configuration is not valid")
 				}
+				bc.Directory = path
+				configs = append(configs, bc)
 			}
 		}
 		return nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return configs, nil
 }
