@@ -13,7 +13,7 @@ func (c *MonoBuild) walk(baseDir string) ([]*buildConfiguration, error) {
 	configs := make([]*buildConfiguration, 0)
 	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
-			marker := p.Join(path, MonoBuildMarker)
+			marker := p.Join(path, Marker)
 			if _, err := os.Stat(marker); err == nil {
 				log.Infof("build configuration found at %s", marker)
 				bc, err := c.loadBuildConfiguration(marker)
