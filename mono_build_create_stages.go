@@ -6,7 +6,7 @@ import (
 )
 
 // createStages builds stages from build configurations
-func (c *MonoBuild) createStages(configurations []*buildConfiguration) error {
+func (c *MonoBuild) createStages(configurations []*BuildConfiguration) error {
 	if len(configurations) == 0 {
 		return nil
 	}
@@ -30,17 +30,17 @@ func (c *MonoBuild) createStages(configurations []*buildConfiguration) error {
 }
 
 // createStage builds a new stage from build configurations
-func (c *MonoBuild) createStage(stageNumber int, configurations []*buildConfiguration) (*Stage, []*buildConfiguration, error) {
+func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfiguration) (*Stage, []*BuildConfiguration, error) {
 	log := c.log.WithField("method", "createStages")
 
 	log.Infof("creating `Stage %d`", stageNumber)
 
 	stage := &Stage{
 		Label:          fmt.Sprintf("Stage %d", stageNumber),
-		Configurations: make([]*buildConfiguration, 0),
+		Configurations: make([]*BuildConfiguration, 0),
 	}
 
-	newConfigurations := make([]*buildConfiguration, 0)
+	newConfigurations := make([]*BuildConfiguration, 0)
 	before := len(configurations)
 	for _, val := range configurations {
 		if len(val.Dependencies) == 0 {

@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 )
 
-func (c *MonoBuild) loadBuildConfiguration(configurationFile string) (*buildConfiguration, error) {
-	var bc buildConfiguration
+func (c *MonoBuild) loadBuildConfiguration(configurationFile string) (*BuildConfiguration, error) {
+	var bc BuildConfiguration
 
 	content, err := ioutil.ReadFile(configurationFile)
 	if err != nil {

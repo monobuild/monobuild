@@ -8,9 +8,9 @@ import (
 )
 
 // walk iterates through sub directories looking for marker
-func (c *MonoBuild) walk(baseDir string) ([]*buildConfiguration, error) {
+func (c *MonoBuild) walk(baseDir string) ([]*BuildConfiguration, error) {
 	log := c.log.WithField("method", "walk")
-	configs := make([]*buildConfiguration, 0)
+	configs := make([]*BuildConfiguration, 0)
 	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			marker := p.Join(path, Marker)
@@ -23,7 +23,7 @@ func (c *MonoBuild) walk(baseDir string) ([]*buildConfiguration, error) {
 				if !bc.configurationIsValid() {
 					return errors.New("build configuration is not valid")
 				}
-				bc.Directory = path
+				bc.SetDirectory(path)
 				configs = append(configs, bc)
 			}
 		}

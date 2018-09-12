@@ -30,7 +30,7 @@ func (stage *Stage) Execute() error {
 }
 
 // runConfiguration executes a single configuration of a stage
-func (stage *Stage) runConfiguration(cfg *buildConfiguration, log *logrus.Entry, result *multierror.Error) *multierror.Error {
+func (stage *Stage) runConfiguration(cfg *BuildConfiguration, log *logrus.Entry, result *multierror.Error) *multierror.Error {
 	for _, cmd := range cfg.Commands {
 		log.Debugf("about to run %s", cmd)
 		p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
@@ -40,7 +40,7 @@ func (stage *Stage) runConfiguration(cfg *buildConfiguration, log *logrus.Entry,
 
 		env := buildEnvironment(cfg)
 		r := interp.Runner{
-			Dir: cfg.Directory,
+			Dir: cfg.GetDirectory(),
 			Env: env,
 
 			Exec: interp.DefaultExec,
@@ -65,7 +65,7 @@ func (stage *Stage) runConfiguration(cfg *buildConfiguration, log *logrus.Entry,
 }
 
 // buildEnvironment builds up a new environment variable list for a process to be executed
-func buildEnvironment(cfg *buildConfiguration) []string {
+func buildEnvironment(cfg *BuildConfiguration) []string {
 	env := os.Environ()
 	for k, v := range cfg.Environment {
 		env = append(env, fmt.Sprintf("%s=%s", k, v))

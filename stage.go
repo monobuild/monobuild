@@ -8,7 +8,7 @@ import (
 // Stage is a build stage containing only independent build configurations
 type Stage struct {
 	Label          string
-	Configurations []*buildConfiguration
+	Configurations []*BuildConfiguration
 	Log            *logrus.Entry
 }
 

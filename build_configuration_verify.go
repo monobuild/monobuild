@@ -5,7 +5,7 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-func (configuration *buildConfiguration) configurationIsValid() bool {
+func (configuration *BuildConfiguration) configurationIsValid() bool {
 	validate := validator.New()
 
 	err := validate.Struct(configuration)
