@@ -40,7 +40,7 @@ func (stage *Stage) runConfiguration(cfg *BuildConfiguration, log *logrus.Entry,
 
 		env := buildEnvironment(cfg)
 		r := interp.Runner{
-			Dir: cfg.GetDirectory(),
+			Dir: cfg.directory,
 			Env: env,
 
 			Exec: interp.DefaultExec,
