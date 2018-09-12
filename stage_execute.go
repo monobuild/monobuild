@@ -19,11 +19,13 @@ func (stage *Stage) Execute() error {
 
 	// TODO decide on parallelism
 	for _, cfg := range stage.Configurations {
-		log.Infof("working on %s", cfg)
-		result = stage.runConfiguration(cfg, log, result)
-		if nil != result {
-			log.Error("error running configuration, breaking")
-			break
+		if !cfg.Parallel {
+			log.Infof("working on %s", cfg)
+			result = stage.runConfiguration(cfg, log, result)
+			if nil != result {
+				log.Error("error running configuration, breaking")
+				break
+			}
 		}
 	}
 	return result.ErrorOrNil()
