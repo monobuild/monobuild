@@ -1,4 +1,5 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,46 +14,8 @@
 
 package main
 
-import (
-	"fmt"
-	"os"
+import "github.com/monobuild/monobuild/cmd/monobuild/cmd"
 
-	"github.com/monobuild/monobuild"
-	"github.com/monobuild/monobuild/cmd/monobuild/methods"
-	"github.com/sirupsen/logrus"
-)
-
-// main is the entry method of the monobuild application
 func main() {
-	logrus.SetLevel(logrus.DebugLevel)
-	if err := run(); err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		os.Exit(1)
-	}
-}
-
-// run is the wrapper to call the monobuild library
-func run() (returnError error) {
-	methods.PrintHeader()
-
-	var err error
-	dir, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	cfg := monobuild.NewMonoBuild()
-
-	exit := make(chan bool)
-
-	go func() {
-		if err = cfg.Run(dir); err != nil {
-			returnError = err
-		}
-		exit <- true
-	}()
-
-	<-exit
-
-	return
+	cmd.Execute()
 }
