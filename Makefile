@@ -52,8 +52,8 @@ release: ## Create release build
 	goreleaser --rm-dist
 
 build: ## build binary to .build folder
-	-rm -f .build/git-hook-commit
-	go build -o ".build/git-hook-commit" cmd/main.go
+	-rm -f .build/monobuild
+	go build -o ".build/monobuild" cmd/monobuild/main.go
 
 # Self-Documented Makefile see https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help:
