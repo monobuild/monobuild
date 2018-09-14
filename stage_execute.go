@@ -4,7 +4,7 @@ package monobuild
 func (stage *Stage) Execute() error {
 	result := stage.executeSync()
 	if nil == result {
-		result = stage.executeAsync()
+		stage.executeAsync()
 	}
 
 	return result.ErrorOrNil()
