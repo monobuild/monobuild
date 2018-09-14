@@ -30,13 +30,9 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "monobuild",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "run a build",
+	Long: `Called without an argument monobuild will run a mono repository build with the 
+default flags or the ones provided in the configuration file.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		logrus.SetLevel(logrus.DebugLevel)
 		if err := methods.Run(); err != nil {
@@ -77,7 +73,7 @@ func initConfig() {
 		// Find home directory.
 		home, err := homedir.Dir()
 		if err != nil {
-			fmt.Println(err)
+			logrus.Error(err)
 			os.Exit(1)
 		}
 
@@ -90,6 +86,6 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		logrus.Infof("Using config file: %s", viper.ConfigFileUsed())
 	}
 }
