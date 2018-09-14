@@ -24,8 +24,6 @@ import (
 
 // main is the entry method of the monobuild application
 func main() {
-	// TODO set WarnLevel as default and provide flag to switch
-	// TODO provide a quiet flag to suppress header
 	logrus.SetLevel(logrus.DebugLevel)
 	if err := run(); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
