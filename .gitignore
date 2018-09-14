@@ -70,4 +70,4 @@ fabric.properties
 .build/
 dist/
 coverage.txt
-cmd/monobuild/.MONOBUILD
+.MONOBUILD
