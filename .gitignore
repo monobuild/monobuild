@@ -71,3 +71,4 @@ fabric.properties
 dist/
 coverage.txt
 .MONOBUILD
+coverage.*

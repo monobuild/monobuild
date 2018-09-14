@@ -26,7 +26,7 @@ func (stage *Stage) executeWithWg(configuration *BuildConfiguration, wg *sync.Wa
 
 	err := configuration.run(stage)
 	if nil != err {
-		log.Errorf("error asynchronously running configuration: %s", err.Error)
+		log.Errorf("error asynchronously running configuration: %s", err.Error())
 	}
 	log.Debugf("parallel execution done: %s", configuration)
 }

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/monobuild/monobuild"
+	"github.com/monobuild/monobuild/cmd/monobuild/methods"
 	"github.com/sirupsen/logrus"
-	"livingit.de/code/monobuild"
-	"livingit.de/code/monobuild/cmd/monobuild/methods"
 )
 
 // main is the entry method of the monobuild application
