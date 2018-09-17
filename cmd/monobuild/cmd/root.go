@@ -55,8 +55,10 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.monobuild.yaml)")
 	rootCmd.Flags().BoolP("no-parallelism", "s", false, "disable parallel execution of steps")
+	rootCmd.Flags().BoolP("quiet", "q", false, "Do not show header (version info and name)")
 
 	viper.BindPFlag("no-parallelism", rootCmd.Flags().Lookup("no-parallelism"))
+	viper.BindPFlag("quiet", rootCmd.Flags().Lookup("quiet"))
 }
 
 // initConfig reads in config file and ENV variables if set.

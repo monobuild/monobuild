@@ -15,6 +15,7 @@ package methods
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -25,6 +26,8 @@ var (
 )
 
 func PrintHeader() {
-	fmt.Fprintln(os.Stdout, "monobuild")
-	fmt.Fprintf(os.Stdout, "%s ( %s ) build on %s\n", versionNumber, commit, date)
+	if !viper.GetBool("quiet") {
+		fmt.Fprintln(os.Stdout, "monobuild")
+		fmt.Fprintf(os.Stdout, "%s ( %s ) build on %s\n", versionNumber, commit, date)
+	}
 }
