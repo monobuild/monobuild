@@ -27,14 +27,14 @@ func (c *MonoBuild) Run(baseDir string) error {
 		return err
 	}
 
-	for _, stage := range stages {
+	for _, stage := range c.stages {
 		log.Debugf("%s", stage)
 		for _, cfg := range stage.Configurations {
 			log.Debugf("  %s", cfg)
 		}
 	}
 
-	for _, stage := range stages {
+	for _, stage := range c.stages {
 		if err := stage.Execute(); err != nil {
 			if multiError, ok := err.(*multierror.Error); ok {
 				for _, err := range multiError.Errors {

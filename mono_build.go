@@ -20,7 +20,8 @@ import (
 type (
 	// MonoBuild contains all data required to run the program
 	MonoBuild struct {
-		log *logrus.Entry // base logging facility
+		log    *logrus.Entry // base logging facility
+		stages []*Stage
 	}
 )
 

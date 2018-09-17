@@ -29,7 +29,7 @@ func (c *MonoBuild) createStages(configurations []*BuildConfiguration) error {
 		err   error
 	)
 	for len(configurations) > 0 {
-		stage, configurations, err = c.createStage(len(stages), configurations)
+		stage, configurations, err = c.createStage(len(c.stages), configurations)
 		if err != nil {
 			for _, cfg := range configurations {
 				log.Warnf("%s could not be added to stage", cfg)
@@ -37,7 +37,7 @@ func (c *MonoBuild) createStages(configurations []*BuildConfiguration) error {
 			return err
 		}
 		stage.Log = c.log
-		stages = append(stages, stage)
+		c.stages = append(c.stages, stage)
 	}
 	return nil
 }
@@ -62,7 +62,7 @@ func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfigur
 		}
 		add := true
 		for _, dep := range val.Dependencies {
-			add = add && dependencyProcessed(dep)
+			add = add && c.dependencyProcessed(dep)
 		}
 		if add {
 			stage.Configurations = append(stage.Configurations, val)
@@ -78,8 +78,8 @@ func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfigur
 }
 
 // dependencyProcessed checks if a dependency is already build
-func dependencyProcessed(label string) bool {
-	for _, stage := range stages {
+func (c *MonoBuild) dependencyProcessed(label string) bool {
+	for _, stage := range c.stages {
 		for _, cfg := range stage.Configurations {
 			if cfg.Label == label {
 				return true
