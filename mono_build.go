@@ -21,7 +21,9 @@ type (
 	// MonoBuild contains all data required to run the program
 	MonoBuild struct {
 		log    *logrus.Entry // base logging facility
-		stages []*Stage
+		stages []*Stage      // build stages are stored here
+
+		DisableParallelism bool // DisableParallelism can be used to run build independently of markers
 	}
 )
 

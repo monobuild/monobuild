@@ -23,7 +23,7 @@ func (stage *Stage) executeAsync() {
 
 	var wg sync.WaitGroup
 	for _, cfg := range stage.Configurations {
-		if !cfg.Parallel {
+		if cfg.Parallel {
 			wg.Add(1)
 			log.Infof("parallel working on %s", cfg)
 			go stage.executeWithWg(cfg, &wg)

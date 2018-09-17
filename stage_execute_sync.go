@@ -16,14 +16,14 @@ package monobuild
 import "github.com/hashicorp/go-multierror"
 
 // executeSync runs all configurations that are not allowed to run in parallel
-func (stage *Stage) executeSync() *multierror.Error {
+func (stage *Stage) executeSync(all bool) *multierror.Error {
 	var (
 		result *multierror.Error
 	)
 	log := stage.Log.WithField("method", "executeSync")
 
 	for _, cfg := range stage.Configurations {
-		if !cfg.Parallel {
+		if !cfg.Parallel || all {
 			log.Infof("working on %s", cfg)
 			err := cfg.run(stage)
 			if nil != err {

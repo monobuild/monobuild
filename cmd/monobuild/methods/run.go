@@ -2,6 +2,7 @@ package methods
 
 import (
 	"github.com/monobuild/monobuild"
+	"github.com/spf13/viper"
 	"os"
 )
 
@@ -16,6 +17,8 @@ func Run() (returnError error) {
 	}
 
 	cfg := monobuild.NewMonoBuild()
+
+	cfg.DisableParallelism = viper.GetBool("no-parallelism")
 
 	exit := make(chan bool)
 

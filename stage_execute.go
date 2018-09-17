@@ -14,9 +14,9 @@
 package monobuild
 
 // Execute runs the content of a stage
-func (stage *Stage) Execute() error {
-	result := stage.executeSync()
-	if nil == result {
+func (stage *Stage) Execute(disableParallelism bool) error {
+	result := stage.executeSync(disableParallelism)
+	if nil == result && !disableParallelism {
 		stage.executeAsync()
 	}
 

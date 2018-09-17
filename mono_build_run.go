@@ -35,7 +35,7 @@ func (c *MonoBuild) Run(baseDir string) error {
 	}
 
 	for _, stage := range c.stages {
-		if err := stage.Execute(); err != nil {
+		if err := stage.Execute(c.DisableParallelism); err != nil {
 			if multiError, ok := err.(*multierror.Error); ok {
 				for _, err := range multiError.Errors {
 					log.Errorf("could not run stage %s: %s", stage, err)
