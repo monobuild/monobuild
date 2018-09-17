@@ -34,7 +34,9 @@ var rootCmd = &cobra.Command{
 	Long: `Called without an argument monobuild will run a mono repository build with the 
 default flags or the ones provided in the configuration file.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		logrus.SetLevel(logrus.DebugLevel)
+		// set default log level
+		methods.SetLogLevel(viper.GetString("log-level"))
+
 		if err := methods.Run(); err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
@@ -56,9 +58,11 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.monobuild.yaml)")
 	rootCmd.Flags().BoolP("no-parallelism", "s", false, "disable parallel execution of steps")
 	rootCmd.Flags().BoolP("quiet", "q", false, "Do not show header (version info and name)")
+	rootCmd.Flags().StringP("log-level", "l", "warn", "Set log level to debug, info or warn (fallback)")
 
 	viper.BindPFlag("no-parallelism", rootCmd.Flags().Lookup("no-parallelism"))
 	viper.BindPFlag("quiet", rootCmd.Flags().Lookup("quiet"))
+	viper.BindPFlag("log-level", rootCmd.Flags().Lookup("log-level"))
 }
 
 // initConfig reads in config file and ENV variables if set.
