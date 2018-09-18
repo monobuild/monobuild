@@ -23,7 +23,8 @@ type (
 		log    *logrus.Entry // base logging facility
 		stages []*Stage      // build stages are stored here
 
-		DisableParallelism bool // DisableParallelism can be used to run build independently of markers
+		DisableParallelism bool   // DisableParallelism can be used to run build independently of markers
+		MarkerName         string // MarkerName is the name of the file with the build configuration
 	}
 )
 

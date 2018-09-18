@@ -19,6 +19,7 @@ func Run() (returnError error) {
 	cfg := monobuild.NewMonoBuild()
 
 	cfg.DisableParallelism = viper.GetBool("no-parallelism")
+	cfg.MarkerName = viper.GetString("marker")
 
 	exit := make(chan bool)
 
