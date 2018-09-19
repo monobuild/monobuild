@@ -53,6 +53,5 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LIC
 
 ## Acknowledgments
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+* [Contributor Covenant](https://www.contributor-covenant.org/) as the source for the code of conduct
+* [PurpleBooth](https://github.com/PurpleBooth) for the [README blueprint](https://gist.githubusercontent.com/PurpleBooth/109311bb0361f32d87a2/raw/8254b53ab8dcb18afc64287aaddd9e5b6059f880/README-Template.md)
