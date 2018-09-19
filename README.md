@@ -26,7 +26,44 @@ TODO
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+You can download the binary from the releases page or use the deb package to install it on a Debian system.
+
+## Usage
+
+### How does monobuild work
+
+monobuild scans the current directory and all subdirectories for a marker file (default name: .MONOBUILD). Each marker can have a dependency on another marker. Based on the dependencies so called stages are calculated and executed.
+
+### What is in a marker file
+
+A marker file contains a build configuration with the following fields:
+
+|Field|Required|Description|
+|---|---|---|
+|Commands|false|Commands are shell commands to be executed|
+|Environment|false|A list of environment variables passed to the commands|
+|Label |true|Label is the name of the build configuration|
+|Dependencies|false|A list of dependencies to other build configurations|
+|Parallel|false|Build configuration may be run in parallel with other build configurations|     
+
+A valid sample:
+
+    ---
+    
+    commands:
+      - echo new marker
+    environment:
+      MONOBUILD_VERSION: develop
+    label: main
+
+### Customization
+
+command line options, config file, etc
+
+## History
+
+|Versino|Description|
+|---|---|
 
 ## Built With
 
