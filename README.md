@@ -30,8 +30,8 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Cobra](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Viper](https://maven.apache.org/) - Dependency Management
+* [Cobra](https://github.com/spf13/cobra) - A Commander for modern Go CLI interactions
+* [Viper](https://github.com/spf13/viper) - Go configuration with fangs
 
 ## Contributing
 
@@ -43,7 +43,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Sascha Andres** - *Initial work* - [PurpleBooth](https://github.com/sascha-andres)
+* **Sascha Andres** - *Initial work* - [sascha-andres](https://github.com/sascha-andres)
 
 See also the list of [contributors](https://github.com/monobuild/monobuild/contributors) who participated in this project.
 
