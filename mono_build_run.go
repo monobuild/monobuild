@@ -15,14 +15,16 @@ package monobuild
 
 import "github.com/hashicorp/go-multierror"
 
-func (c *MonoBuild) Run(baseDir string) error {
-	log := c.log.WithField("method", "run")
-	configurations, err := c.walk(baseDir)
-	if err != nil {
-		return err
-	}
+func (c *MonoBuild) LoadConfigurations() error {
+	c.log.WithField("method", "run").Debug("Loading configurations from filesystem")
+	return c.walk()
+}
 
-	err = c.createStages(configurations)
+func (c *MonoBuild) Run() error {
+	log := c.log.WithField("method", "run")
+	log.Debugf("running for %d configurations", len(c.configurations))
+
+	err := c.createStages(c.configurations)
 	if err != nil {
 		return err
 	}
