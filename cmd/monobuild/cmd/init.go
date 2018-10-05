@@ -17,6 +17,7 @@ package cmd
 import (
 	"github.com/monobuild/monobuild/cmd/monobuild/methods"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -35,7 +36,7 @@ The template used:
       MONOBUILD_VERSION: <version>
     label: <current directory name>`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := methods.CreateMarkerFile(".MONOBUILD"); err != nil {
+		if err := methods.CreateMarkerFile(viper.GetString("marker")); err != nil {
 			panic(err)
 		}
 	},
@@ -43,14 +44,4 @@ The template used:
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
