@@ -16,7 +16,7 @@ func Run() (returnError error) {
 		panic(err)
 	}
 
-	cfg := monobuild.NewMonoBuild()
+	cfg := monobuild.NewMonoBuild(dir)
 
 	cfg.DisableParallelism = viper.GetBool("no-parallelism")
 	cfg.MarkerName = viper.GetString("marker")
@@ -24,8 +24,10 @@ func Run() (returnError error) {
 	exit := make(chan bool)
 
 	go func() {
-		if err = cfg.Run(dir); err != nil {
+		if err := cfg.LoadConfigurations(); err != nil {
 			returnError = err
+		} else {
+			returnError = cfg.Run()
 		}
 		exit <- true
 	}()

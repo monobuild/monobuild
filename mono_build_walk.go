@@ -21,10 +21,10 @@ import (
 )
 
 // walk iterates through sub directories looking for marker
-func (c *MonoBuild) walk(baseDir string) ([]*BuildConfiguration, error) {
+func (c *MonoBuild) walk() error {
 	log := c.log.WithField("method", "walk")
 	configs := make([]*BuildConfiguration, 0)
-	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(c.baseDirectory, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			marker := p.Join(path, c.MarkerName)
 			if _, err := os.Stat(marker); err == nil {
@@ -42,8 +42,6 @@ func (c *MonoBuild) walk(baseDir string) ([]*BuildConfiguration, error) {
 		}
 		return nil
 	})
-	if err != nil {
-		return nil, err
-	}
-	return configs, nil
+	c.configurations = configs
+	return err
 }

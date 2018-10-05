@@ -20,8 +20,10 @@ import (
 type (
 	// MonoBuild contains all data required to run the program
 	MonoBuild struct {
-		log    *logrus.Entry // base logging facility
-		stages []*Stage      // build stages are stored here
+		log            *logrus.Entry         // base logging facility
+		stages         []*Stage              // build stages are stored here
+		baseDirectory  string                // baseDirectory determines the root from where to scan
+		configurations []*BuildConfiguration // configurations all found configurations
 
 		DisableParallelism bool   // DisableParallelism can be used to run build independently of markers
 		MarkerName         string // MarkerName is the name of the file with the build configuration
@@ -29,8 +31,9 @@ type (
 )
 
 // NewMonoBuild creates an empty mono build runner
-func NewMonoBuild() *MonoBuild {
+func NewMonoBuild(baseDir string) *MonoBuild {
 	return &MonoBuild{
-		log: logrus.WithField("package", "monobuild"),
+		log:           logrus.WithField("package", "monobuild"),
+		baseDirectory: baseDir,
 	}
 }
