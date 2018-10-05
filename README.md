@@ -110,6 +110,7 @@ Unless `--no-parallelism` is passed first all configurations that are not allowe
 
 |Version|Description|
 |---|---|
+|0.9.0|initial working copy|
 
 ## Built With
 
