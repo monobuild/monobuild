@@ -58,11 +58,57 @@ A valid sample:
 
 ### Customization
 
-command line options, config file, etc
+On the root level there are the following commandline parameters possible:
 
+|Parameter|Description|
+|---|---|
+|--config|Set an alternative config file|
+|--log-level|Set log level to debug, info or warn (fallback) (default "warn")|
+|--marker|name of marker file (default ".MONOBUILD")|
+|--no-parallelism|disable parallel execution of steps|
+|--quit|Do not show header (version info and name)|
+
+### Sample layout
+
+`.MONOBUILD` in root directory
+
+    ---
+    
+    commands:
+      - echo root dir
+    dependencies:
+      - other component
+    label: main
+
+`.MONOBUILD` in sub directory:
+
+    ---
+    
+    commands:
+      - echo other component
+    label: other component
+    parallel: true
+
+Above sample creates a run with two stages to run first `other component` and than `main`.
+
+Let's add another `.MONOBUILD` in another directory:
+
+    ---
+    
+    commands:
+      - echo yet other component
+    label: yet other component
+    parallel: true
+
+This will be added to the first stage (no dependency) and executed in parallel as both configurations allow for parallel execution.
+
+### Parallelism
+
+Unless `--no-parallelism` is passed first all configurations that are not allowed to run in parallel in a stage are executed and afterward the one that are allowed are executed. As such you _could_ introduce sub stages but this is highly discouraged. It is better to clearly communicate dependencies and adding additional stages. 
+    
 ## History
 
-|Versino|Description|
+|Version|Description|
 |---|---|
 
 ## Built With

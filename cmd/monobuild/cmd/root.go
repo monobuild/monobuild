@@ -59,7 +59,7 @@ func init() {
 	rootCmd.Flags().BoolP("no-parallelism", "s", false, "disable parallel execution of steps")
 	rootCmd.Flags().BoolP("quiet", "q", false, "Do not show header (version info and name)")
 	rootCmd.Flags().StringP("log-level", "l", "warn", "Set log level to debug, info or warn (fallback)")
-	rootCmd.Flags().StringP("marker", "m", ".MONOBUILD", "name of configuration file")
+	rootCmd.Flags().StringP("marker", "m", ".MONOBUILD", "name of marker file")
 
 	viper.BindPFlag("no-parallelism", rootCmd.Flags().Lookup("no-parallelism"))
 	viper.BindPFlag("quiet", rootCmd.Flags().Lookup("quiet"))
