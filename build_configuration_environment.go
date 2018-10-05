@@ -15,14 +15,15 @@ package monobuild
 
 import (
 	"fmt"
+	"mvdan.cc/sh/interp"
 	"os"
 )
 
 // environment builds up a new environment variable list for a process to be executed
-func (configuration *BuildConfiguration) environment() []string {
+func (configuration *BuildConfiguration) environment() (interp.Environ, error) {
 	env := os.Environ()
 	for k, v := range configuration.Environment {
 		env = append(env, fmt.Sprintf("%s=%s", k, v))
 	}
-	return env
+	return interp.EnvFromList(env)
 }

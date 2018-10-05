@@ -35,7 +35,10 @@ func (configuration *BuildConfiguration) run(stage *Stage) *multierror.Error {
 			result = multierror.Append(result, err)
 		}
 
-		env := configuration.environment()
+		env, err := configuration.environment()
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
 		r := interp.Runner{
 			Dir: configuration.directory,
 			Env: env,
