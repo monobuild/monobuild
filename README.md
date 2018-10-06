@@ -20,6 +20,8 @@ Within `$GOPATH/src/github.com/monobuild/monobuild` you should be able to run a 
 
     go run cmd/monobuild/main.go
 
+This is a vgo enabled repository
+
 ## Running the tests
 
 TODO
