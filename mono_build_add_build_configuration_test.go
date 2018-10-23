@@ -19,10 +19,15 @@ func TestCreateStages(t *testing.T) {
 		directory: ".",
 		Commands:  []string{"echo other"},
 	})
-	err := c.Run()
-	if err != nil {
+
+	if err := c.Setup(""); err != nil {
 		t.FailNow()
 	}
+
+	//if err := c.Run(); err != nil {
+	//	t.FailNow()
+	//}
+
 	if 2 != len(c.stages) {
 		t.Log("there should be two stages")
 		t.Fail()

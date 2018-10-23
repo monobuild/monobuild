@@ -1,7 +1,6 @@
 package monobuild
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 )
 
@@ -13,12 +12,11 @@ func (c *MonoBuild) AddBuildConfiguration(configuration *BuildConfiguration) err
 	if !configuration.configurationIsValid() {
 		return errors.New("configuration is not valid")
 	}
-	for _, val := range c.configurations {
-		if val.Label == configuration.Label {
-			return errors.New(fmt.Sprintf("configuration [%s] already exists", val.Label))
-		}
+
+	if _, ok := c.configurations[configuration.Label]; ok {
+		return errors.New("non unique Labels found")
 	}
 
-	c.configurations = append(c.configurations, configuration)
+	c.configurations[configuration.Label] = configuration
 	return nil
 }
