@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -13,29 +13,29 @@
 
 package monobuild
 
-import "github.com/hashicorp/go-multierror"
+import (
+	"errors"
+	"github.com/hashicorp/go-multierror"
+	"github.com/sirupsen/logrus"
+)
 
-func (c *MonoBuild) LoadConfigurations() error {
-	c.log.WithField("method", "run").Debug("Loading configurations from filesystem")
-	return c.walk()
-}
-
+// Run executes the build configurations
 func (c *MonoBuild) Run() error {
-	log := c.log.WithField("method", "run")
+	log := c.log.WithField("method", "Run")
 	log.Debugf("running for %d configurations", len(c.configurations))
 
-	err := c.createStages(c.configurations)
-	if err != nil {
-		return err
+	if !c.ready {
+		return errors.New("setup not done")
 	}
 
-	for _, stage := range c.stages {
-		log.Debugf("%s", stage)
-		for _, cfg := range stage.Configurations {
-			log.Debugf("  %s", cfg)
-		}
-	}
+	c.printStageInformation(log)
+	c.executeConfigurations(log)
 
+	return nil
+}
+
+// executeConfigurations starts building all configurations
+func (c *MonoBuild) executeConfigurations(log *logrus.Entry) {
 	for _, stage := range c.stages {
 		if err := stage.Execute(c.DisableParallelism); err != nil {
 			if multiError, ok := err.(*multierror.Error); ok {
@@ -46,6 +46,14 @@ func (c *MonoBuild) Run() error {
 			break
 		}
 	}
+}
 
-	return nil
+// printStageInformation prints out some debug information about stages
+func (c *MonoBuild) printStageInformation(log *logrus.Entry) {
+	for _, stage := range c.stages {
+		log.Debugf("%s", stage)
+		for _, cfg := range stage.Configurations {
+			log.Debugf("  %s", cfg)
+		}
+	}
 }

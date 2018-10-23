@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import (
 )
 
 // createStages builds stages from build configurations
-func (c *MonoBuild) createStages(configurations []*BuildConfiguration) error {
+func (c *MonoBuild) createStages(configurations map[string]*BuildConfiguration) error {
 	if len(configurations) == 0 {
 		return nil
 	}
@@ -43,7 +43,7 @@ func (c *MonoBuild) createStages(configurations []*BuildConfiguration) error {
 }
 
 // createStage builds a new stage from build configurations
-func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfiguration) (*Stage, []*BuildConfiguration, error) {
+func (c *MonoBuild) createStage(stageNumber int, configurations map[string]*BuildConfiguration) (*Stage, map[string]*BuildConfiguration, error) {
 	log := c.log.WithField("method", "createStages")
 
 	log.Infof("creating `Stage %d`", stageNumber)
@@ -53,7 +53,7 @@ func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfigur
 		Configurations: make([]*BuildConfiguration, 0),
 	}
 
-	newConfigurations := make([]*BuildConfiguration, 0)
+	newConfigurations := make(map[string]*BuildConfiguration, 0)
 	before := len(configurations)
 	for _, val := range configurations {
 		if len(val.Dependencies) == 0 {
@@ -68,7 +68,7 @@ func (c *MonoBuild) createStage(stageNumber int, configurations []*BuildConfigur
 			stage.Configurations = append(stage.Configurations, val)
 			continue
 		}
-		newConfigurations = append(newConfigurations, val)
+		newConfigurations[val.Label] = val
 	}
 	after := len(newConfigurations)
 	if before == after {

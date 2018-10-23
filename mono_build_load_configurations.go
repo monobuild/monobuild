@@ -13,7 +13,8 @@
 
 package monobuild
 
-// SetDirectory stores the directory of the build configuration
-func (configuration *BuildConfiguration) SetDirectory(path string) {
-	configuration.directory = path
+// LoadConfigurations scans the directory tree for build configurations
+func (c *MonoBuild) LoadConfigurations() error {
+	c.log.WithField("method", "run").Debug("Loading configurations from filesystem")
+	return c.walk()
 }

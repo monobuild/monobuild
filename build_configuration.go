@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -24,6 +24,7 @@ type BuildConfiguration struct {
 	Parallel     bool              `yaml:"parallel"`                  // Parallel determines whether build configuration is allowed to run in parallel
 
 	directory string `yaml:"-"` // directory is used to store the directory of the build configuration
+	skip      bool   `yaml:"-"` // skip is a flag to skip configuration based on the limit flag
 }
 
 // The String method is used to print values passed as an operand
