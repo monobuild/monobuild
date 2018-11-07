@@ -24,7 +24,7 @@ This is a vgo enabled repository
 
 ## Running the tests
 
-TODO
+You can run the tests by calling `go test ./...`
 
 ## Deployment
 
@@ -51,7 +51,7 @@ A marker file contains a build configuration with the following fields:
 A valid sample:
 
     ---
-    
+
     commands:
       - echo new marker
     environment:
@@ -107,11 +107,36 @@ This will be added to the first stage (no dependency) and executed in parallel a
 ### Parallelism
 
 Unless `--no-parallelism` is passed first all configurations that are not allowed to run in parallel in a stage are executed and afterward the one that are allowed are executed. As such you _could_ introduce sub stages but this is highly discouraged. It is better to clearly communicate dependencies and adding additional stages. 
-    
+
+### Usage as an API
+
+monobuild was designed to be usable as a library.
+
+To use monobuild create an instance by calling `NewMonobuild` with the base path to work on.
+
+    cfg := monobuild.NewMonoBuild(dir)
+
+    // cfg.DisableParallelism = true to disable any parallel tasks
+    // cfg.MarkerName = "somestring" to use somestring as markerfile
+
+A four step process follows:
+
+1. Load the build configurations from disk using `cfg.LoadConfigurations()`
+2. Add configurations from code using `cfg.AddBuildConfiguration()`
+3. Run `cfg.Setup()` to build the plan
+4. Execute the build using `cfg.Run()`
+
+See the monobuild utility for an example how to consume this library.
+
+#### AddBuildConfiguration
+
 ## History
 
 |Version|Description|
 |---|---|
+|1.0.0|Allow adding buildconfigurations from code|
+||Use go modules|
+||Allow limiting to one build configuration including dependencies|
 |0.9.0|initial working copy|
 
 ## Built With
