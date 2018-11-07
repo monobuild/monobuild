@@ -27,7 +27,11 @@ func Run() (returnError error) {
 		if err := cfg.LoadConfigurations(); err != nil {
 			returnError = err
 		} else {
-			returnError = cfg.Run()
+			if err := cfg.Setup(viper.GetString("limit")); err != nil {
+				returnError = err
+			} else {
+				returnError = cfg.Run()
+			}
 		}
 		exit <- true
 	}()

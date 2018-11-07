@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -20,10 +20,11 @@ import (
 type (
 	// MonoBuild contains all data required to run the program
 	MonoBuild struct {
-		log            *logrus.Entry         // base logging facility
-		stages         []*Stage              // build stages are stored here
-		baseDirectory  string                // baseDirectory determines the root from where to scan
-		configurations []*BuildConfiguration // configurations all found configurations
+		log            *logrus.Entry                  // base logging facility
+		stages         []*Stage                       // build stages are stored here
+		baseDirectory  string                         // baseDirectory determines the root from where to scan
+		configurations map[string]*BuildConfiguration // configurations all found configurations
+		ready          bool                           // ready denotes whether the setup is done
 
 		DisableParallelism bool   // DisableParallelism can be used to run build independently of markers
 		MarkerName         string // MarkerName is the name of the file with the build configuration
@@ -33,7 +34,8 @@ type (
 // NewMonoBuild creates an empty mono build runner
 func NewMonoBuild(baseDir string) *MonoBuild {
 	return &MonoBuild{
-		log:           logrus.WithField("package", "monobuild"),
-		baseDirectory: baseDir,
+		log:            logrus.WithField("package", "monobuild"),
+		baseDirectory:  baseDir,
+		configurations: make(map[string]*BuildConfiguration),
 	}
 }

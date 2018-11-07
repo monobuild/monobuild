@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -15,14 +15,15 @@ package monobuild
 
 import (
 	"fmt"
+	"mvdan.cc/sh/interp"
 	"os"
 )
 
 // environment builds up a new environment variable list for a process to be executed
-func (configuration *BuildConfiguration) environment() []string {
+func (configuration *BuildConfiguration) environment() (interp.Environ, error) {
 	env := os.Environ()
 	for k, v := range configuration.Environment {
 		env = append(env, fmt.Sprintf("%s=%s", k, v))
 	}
-	return env
+	return interp.EnvFromList(env)
 }

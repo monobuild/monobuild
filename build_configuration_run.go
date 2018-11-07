@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -28,6 +28,11 @@ func (configuration *BuildConfiguration) run(stage *Stage) *multierror.Error {
 	)
 	log := stage.Log.WithField("method", "run")
 
+	if configuration.skip {
+		log.Infof("%s will be skipped", configuration)
+		return nil
+	}
+
 	for _, cmd := range configuration.Commands {
 		log.Debugf("about to run %s", cmd)
 		p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
@@ -35,7 +40,10 @@ func (configuration *BuildConfiguration) run(stage *Stage) *multierror.Error {
 			result = multierror.Append(result, err)
 		}
 
-		env := configuration.environment()
+		env, err := configuration.environment()
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
 		r := interp.Runner{
 			Dir: configuration.directory,
 			Env: env,

@@ -1,0 +1,7 @@
+---
+
+commands:
+  - make build
+environment:
+  MONOBUILD_VERSION: develop
+label: main

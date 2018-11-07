@@ -1,4 +1,4 @@
-// Copyright © 2017 Sascha Andres <sascha.andres@outlook.com>
+// Copyright © 2018 Sascha Andres <sascha.andres@outlook.com>
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -23,7 +23,6 @@ import (
 // walk iterates through sub directories looking for marker
 func (c *MonoBuild) walk() error {
 	log := c.log.WithField("method", "walk")
-	configs := make([]*BuildConfiguration, 0)
 	err := filepath.Walk(c.baseDirectory, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			marker := p.Join(path, c.MarkerName)
@@ -37,11 +36,12 @@ func (c *MonoBuild) walk() error {
 					return errors.New("build configuration is not valid")
 				}
 				bc.SetDirectory(path)
-				configs = append(configs, bc)
+				if err := c.AddBuildConfiguration(bc); err != nil {
+					return err
+				}
 			}
 		}
 		return nil
 	})
-	c.configurations = configs
 	return err
 }
