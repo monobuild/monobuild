@@ -14,11 +14,13 @@
 package monobuild
 
 import (
+	"context"
+	"os"
+	"strings"
+
 	"github.com/hashicorp/go-multierror"
 	"mvdan.cc/sh/interp"
 	"mvdan.cc/sh/syntax"
-	"os"
-	"strings"
 )
 
 // run executes a single configuration of a stage
@@ -44,21 +46,13 @@ func (configuration *BuildConfiguration) run(stage *Stage) *multierror.Error {
 		if err != nil {
 			result = multierror.Append(result, err)
 		}
-		r := interp.Runner{
-			Dir: configuration.directory,
-			Env: env,
-
-			Exec: interp.DefaultExec,
-			Open: interp.OpenDevImpls(interp.DefaultOpen),
-
-			Stdin:  os.Stdin,
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		}
-		if err = r.Reset(); err != nil {
+		r, err := interp.New(interp.Env(env), interp.StdIO(os.Stdin, os.Stdout, os.Stderr), interp.Dir(configuration.directory))
+		if err != nil {
 			result = multierror.Append(result, err)
+			return result
 		}
-		err = r.Run(p)
+		r.Reset()
+		err = r.Run(context.Background(), p)
 		if err != nil {
 			result = multierror.Append(result, err)
 		}

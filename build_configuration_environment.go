@@ -14,16 +14,61 @@
 package monobuild
 
 import (
-	"fmt"
-	"mvdan.cc/sh/interp"
 	"os"
+	"strings"
+
+	"mvdan.cc/sh/expand"
 )
 
-// environment builds up a new environment variable list for a process to be executed
-func (configuration *BuildConfiguration) environment() (interp.Environ, error) {
-	env := os.Environ()
-	for k, v := range configuration.Environment {
-		env = append(env, fmt.Sprintf("%s=%s", k, v))
+type MonobuildEnviron struct {
+	environmentVariables map[string]expand.Variable
+}
+
+func newMonobuildEnviron() MonobuildEnviron {
+	return MonobuildEnviron{environmentVariables: map[string]expand.Variable{}}
+}
+
+func (m MonobuildEnviron) Get(name string) expand.Variable {
+	if v, ok := m.environmentVariables[name]; ok {
+		return v
 	}
-	return interp.EnvFromList(env)
+	return expand.Variable{}
+}
+
+func (m MonobuildEnviron) Each(f func(name string, vr expand.Variable) bool) {
+	for s := range m.environmentVariables {
+		if !f(s, m.environmentVariables[s]) {
+			break
+		}
+	}
+}
+
+func (m MonobuildEnviron) Set(name string, vr expand.Variable) {
+	m.environmentVariables[name] = vr
+}
+
+// environment builds up a new environment variable list for a process to be executed
+func (configuration *BuildConfiguration) environment() (expand.Environ, error) {
+	var m = newMonobuildEnviron()
+	env := os.Environ()
+	for i := range env {
+		kv := strings.SplitN(env[i], "=", 2)
+		m.Set(kv[0], expand.Variable{
+			Local:    false,
+			Exported: true,
+			ReadOnly: true,
+			NameRef:  true,
+			Value:    kv[1],
+		})
+	}
+	for k, v := range configuration.Environment {
+		m.Set(k, expand.Variable{
+			Local:    false,
+			Exported: true,
+			ReadOnly: true,
+			NameRef:  true,
+			Value:    v,
+		})
+	}
+	return m, nil
 }

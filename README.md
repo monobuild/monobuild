@@ -12,15 +12,9 @@ monobuild is build with Go. So you need to have a Go environment up and running.
 
 ### Installing
 
-To get the code of monobuild you can run go get:
-
-    go get -u github.com/monobuild/monobuild
-
 Within `$GOPATH/src/github.com/monobuild/monobuild` you should be able to run a test:
 
     go run cmd/monobuild/main.go
-
-This is a vgo enabled repository
 
 ## Running the tests
 
