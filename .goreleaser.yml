@@ -1,3 +1,5 @@
+---
+
 project_name: monobuild
 builds:
   - binary: monobuild
@@ -8,10 +10,10 @@ builds:
       - darwin
     goarch:
       - amd64
-      - x86
+      - arm64
     ldflags: -extldflags "-static" -s -w -X github.com/monobuild/monobuild/cmd/monobuild/methods.versionNumber={{.Version}} -X github.com/monobuild/monobuild/cmd/monobuild/methods.commit={{.Commit}} -X github.com/monobuild/monobuild/cmd/monobuild/methods.date={{.Date}}
     env:
-    - CGO_ENABLED=0
+      - CGO_ENABLED=0
 
 checksum:
   name_template: "{{ .ProjectName }}_checksums.txt"
@@ -19,21 +21,8 @@ checksum:
 snapshot:
   name_template: SNAPSHOT-{{.Commit}}
 
-nfpm:
-    vendor: Sascha Andres
-    homepage: https://livingit.de
-    maintainer: Sascha Andres <sascha.andres@outlook.com>
-    description: build utility for mono repositories
-    license: Apache 2.0
-    formats:
-      - deb
-    dependencies:
-      - git
-    bindir: /usr/local/bin
-
 release:
   draft: true
   github:
-      owner: sascha-andres
-      name: monobuild
-
+    owner: sascha-andres
+    name: monobuild

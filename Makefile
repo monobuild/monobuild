@@ -17,10 +17,10 @@ test-file:
 	make build; mv .build/git-hook-commit ~/go/bin; git-hook-commit test/commit-message
 
 snapshot: ## Create snapshot build
-	goreleaser --skip-publish --rm-dist --snapshot
+	goreleaser --skip=publish --clean --snapshot
 
 release: ## Create release build
-	goreleaser --rm-dist
+	goreleaser --clean
 
 build: ## build binary to .build folder
 	-rm -f .build/monobuild
