@@ -3,13 +3,13 @@ module github.com/monobuild/monobuild
 go 1.22
 
 require (
+	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
-	gopkg.in/go-playground/validator.v9 v9.31.0
 	gopkg.in/yaml.v2 v2.4.0
 	mvdan.cc/sh v2.6.4+incompatible
 )

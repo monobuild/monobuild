@@ -13,7 +13,18 @@
 
 package monobuild
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+	"os"
+	"strings"
+
+	"github.com/go-playground/validator"
+	"github.com/hashicorp/go-multierror"
+	"github.com/sirupsen/logrus"
+	"mvdan.cc/sh/interp"
+	"mvdan.cc/sh/syntax"
+)
 
 // BuildConfiguration contains information about how to build the software
 type BuildConfiguration struct {
@@ -32,4 +43,62 @@ type BuildConfiguration struct {
 // such as Print.
 func (configuration *BuildConfiguration) String() string {
 	return fmt.Sprintf("build configuration `%s`", configuration.Label)
+}
+
+func (configuration *BuildConfiguration) configurationIsValid() bool {
+	validate := validator.New()
+
+	err := validate.Struct(configuration)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			logrus.Errorf("%s is %s", err.StructField(), err.ActualTag())
+		}
+		return false
+	}
+	return true
+}
+
+// SetDirectory stores the directory of the build configuration
+func (configuration *BuildConfiguration) SetDirectory(path string) {
+	configuration.directory = path
+}
+
+// run executes a single configuration of a stage
+func (configuration *BuildConfiguration) run(stage *Stage) *multierror.Error {
+	var (
+		result *multierror.Error
+	)
+	log := stage.Log.WithField("method", "run")
+
+	if configuration.skip {
+		log.Infof("%s will be skipped", configuration)
+		return nil
+	}
+
+	for _, cmd := range configuration.Commands {
+		log.Debugf("about to run %s", cmd)
+		p, err := syntax.NewParser().Parse(strings.NewReader(cmd), "")
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
+
+		env, err := configuration.environment()
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
+		r, err := interp.New(interp.Env(env), interp.StdIO(os.Stdin, os.Stdout, os.Stderr), interp.Dir(configuration.directory))
+		if err != nil {
+			result = multierror.Append(result, err)
+			return result
+		}
+		r.Reset()
+		err = r.Run(context.Background(), p)
+		if err != nil {
+			result = multierror.Append(result, err)
+		}
+		if nil != result {
+			break
+		}
+	}
+	return result
 }
