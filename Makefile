@@ -1,12 +1,5 @@
 .PHONY: test
 
-setup: ## Install all the build and lint dependencies
-	go get -u gopkg.in/alecthomas/gometalinter.v2
-	go get -u github.com/golang/dep/cmd/dep
-	go get -u golang.org/x/tools/cmd/goimports
-	dep ensure
-	gometalinter --install --update
-
 test: ## Run all the tests
 	rm -f coverage.tmp && rm -f coverage.txt
 	echo 'mode: atomic' > coverage.txt && go list ./... | xargs -n1 -I{} sh -c 'go test -race -covermode=atomic -coverprofile=coverage.tmp {} && tail -n +2 coverage.tmp >> coverage.txt' && rm coverage.tmp
@@ -19,28 +12,6 @@ fmt: ## gofmt and goimports all go files
 
 fmt-run: ## run gofmt all go files without changing
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -l -s "$$file"; done
-
-lint:  fmt ## Run all the linters
-	gometalinter --vendor --disable-all \
-		--enable=deadcode \
-		--enable=gocyclo \
-		--enable=ineffassign \
-		--enable=gosimple \
-		--enable=staticcheck \
-		--enable=gofmt \
-		--enable=golint \
-		--enable=goimports \
-		--enable=dupl \
-		--enable=misspell \
-		--enable=errcheck \
-		--enable=vet \
-		--enable=vetshadow \
-		--enable=varcheck \
-		--enable=structcheck \
-		--enable=interfacer \
-		--enable=goconst \
-		--deadline=10m \
-		./...
 
 test-file:
 	make build; mv .build/git-hook-commit ~/go/bin; git-hook-commit test/commit-message
